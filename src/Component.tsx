@@ -24,7 +24,7 @@ const imgBenefit1 = "http://localhost:3845/assets/84a5f4fa6a9f8b187adfea66c92a0b
 const imgBenefit2 = "http://localhost:3845/assets/45388e79d5c26f42759d6b2f7902413ebbd355d6.png";
 const imgImageFill = "http://localhost:3845/assets/2f5021145343d62884a953075ec2e963333532e3.png";
 const imgAsset11 = "http://localhost:3845/assets/cbaf25df873bf4dfa88a5ba3642a3af9c49529ee.png";
-const img11 = "http://localhost:3845/assets/efe4a8d427a0264bbe162e036409448db7cf7002.png";
+// img11 removed - replaced by FloatingCat component
 const imgPath = "http://localhost:3845/assets/f1eddaf8b57092834437965ec2bf697e21e1e888.svg";
 const imgPath1 = "http://localhost:3845/assets/f4c15cde5f017d6c6d556269e6c84fb313db9db9.svg";
 const imgPath2 = "http://localhost:3845/assets/fb4474c72d1af65c47901edf02e4984328b145cd.svg";
@@ -698,6 +698,8 @@ function ElementSystemIOsNotch({ className, visible = true }: ElementSystemIOsNo
   );
 }
 
+import FloatingCat from './FloatingCat'
+
 export default function Component() {
   return (
     <div className="bg-[var(--bg\/b09,#f7f7f7)] relative size-full" data-name="하이" data-node-id="222:42022">
@@ -1315,14 +1317,7 @@ export default function Component() {
         </div>
         <Line className="absolute h-0 left-0 right-0 top-0" color="L08" type="0.5" />
       </div>
-      <div className="absolute bottom-[94px] right-[20px]" data-node-id="222:43027">
-        <div className="absolute border border-[rgba(0,0,0,0.05)] border-solid bottom-[94px] h-[58px] right-[20px] rounded-[25px] w-[63px]" data-node-id="222:43028" style={{ backgroundImage: "linear-gradient(rgb(0, 220, 100) 0%, rgb(255, 255, 255) 100%), linear-gradient(90deg, rgb(0, 220, 100) 0%, rgb(0, 220, 100) 100%)" }} />
-        <div className="absolute bottom-[94px] h-[69px] right-[20px] rounded-[25px] w-[63px]" data-name="ㅅㄷㅅㅁ1 1" data-node-id="222:43029">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[25px]">
-            <img alt="" className="absolute h-[200.5%] left-[-14.93%] max-w-none top-[-19.48%] w-[138.42%]" src={img11} />
-          </div>
-        </div>
-      </div>
+      <FloatingCat />
       <div className="absolute bottom-[154.53px] right-[3px]" data-node-id="222:43030">
         <div className="absolute bottom-[154.53px] h-[29.472px] right-[3px] w-[101px]" data-name="Union" data-node-id="222:43031">
           <img alt="" className="absolute block max-w-none size-full" src={imgUnion} />
