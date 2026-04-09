@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const TOTAL_FRAMES = 156
 const FPS = 24
@@ -11,6 +11,7 @@ export default function FloatingCat() {
   const imagesRef = useRef<HTMLImageElement[]>([])
   const loadedRef = useRef(0)
   const rafRef = useRef<number>(0)
+  const [bubblePhase, setBubblePhase] = useState<'in' | 'show' | 'out' | 'hidden'>('in')
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -52,10 +53,51 @@ export default function FloatingCat() {
     return () => cancelAnimationFrame(rafRef.current)
   }, [])
 
+  // 말풍선 애니메이션 타이머
+  useEffect(() => {
+    // in(0.4s) → show → out(4초 후, 0.4s) → hidden
+    const outTimer = setTimeout(() => setBubblePhase('out'), 4400)
+    const hideTimer = setTimeout(() => setBubblePhase('hidden'), 4800)
+    return () => { clearTimeout(outTimer); clearTimeout(hideTimer) }
+  }, [])
+
+  const bubbleStyle: React.CSSProperties = {
+    position: 'relative',
+    background: '#111',
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 600,
+    fontFamily: '"Pretendard", -apple-system, BlinkMacSystemFont, sans-serif',
+    padding: '6px 12px',
+    borderRadius: 20,
+    whiteSpace: 'nowrap',
+    marginBottom: 10,
+    transformOrigin: 'right center',
+    transition: 'transform 0.4s cubic-bezier(0.34,1.2,0.64,1), opacity 0.4s ease',
+    ...(bubblePhase === 'in'
+      ? { transform: 'scaleX(0)', opacity: 0 }
+      : bubblePhase === 'show'
+      ? { transform: 'scaleX(1)', opacity: 1 }
+      : bubblePhase === 'out'
+      ? { transform: 'scaleX(0)', opacity: 0 }
+      : { display: 'none' }),
+  }
+
+  const textStyle: React.CSSProperties = {
+    transition: 'opacity 0.4s ease 0.15s',
+    opacity: bubblePhase === 'show' ? 1 : 0,
+  }
+
+  // mount 후 한 프레임 뒤에 'show' 로 전환
+  useEffect(() => {
+    const t = requestAnimationFrame(() => setBubblePhase('show'))
+    return () => cancelAnimationFrame(t)
+  }, [])
+
   return (
     <div style={{
       position: 'fixed',
-      bottom: 66,  /* toolbar 50 + 여백 16 */
+      bottom: 66,
       right: 16,
       zIndex: 999,
       cursor: 'pointer',
@@ -63,32 +105,21 @@ export default function FloatingCat() {
       flexDirection: 'column',
       alignItems: 'flex-end',
     }}>
-      {/* 말풍선 */}
-      <div style={{
-        position: 'relative',
-        background: '#111',
-        color: '#fff',
-        fontSize: 12,
-        fontWeight: 600,
-        fontFamily: '"Pretendard", -apple-system, BlinkMacSystemFont, sans-serif',
-        padding: '6px 12px',
-        borderRadius: 20,
-        whiteSpace: 'nowrap',
-        marginBottom: 10,  /* 꼬리 절반 7px + gap 3px */
-      }}>
-        일이삼사오육칠팔구십
-        {/* 꼬리: 다이아몬드, 위쪽 절반이 버블 뒤에 숨음 */}
-        <div style={{
-          position: 'absolute',
-          bottom: -7,
-          right: 24,   /* cat 중앙(31px) - 다이아 절반(7px) */
-          width: 14,
-          height: 14,
-          background: '#111',
-          transform: 'rotate(45deg)',
-          borderRadius: 0.84,
-        }}/>
-      </div>
+      {bubblePhase !== 'hidden' && (
+        <div style={bubbleStyle}>
+          <span style={textStyle}>일이삼사오육칠팔구십</span>
+          <div style={{
+            position: 'absolute',
+            bottom: -7,
+            right: 24,
+            width: 14,
+            height: 14,
+            background: '#111',
+            transform: 'rotate(45deg)',
+            borderRadius: 0.84,
+          }}/>
+        </div>
+      )}
       <canvas
         ref={canvasRef}
         style={{ width: SIZE, height: SIZE, display: 'block' }}
