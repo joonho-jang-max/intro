@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 const TOTAL_FRAMES = 156
 const FPS = 24
 const BASE = import.meta.env.BASE_URL
-const SIZE = 58  // display size on screen
+const SIZE = 62
 
 export default function FloatingCat() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -15,14 +15,16 @@ export default function FloatingCat() {
   useEffect(() => {
     const canvas = canvasRef.current!
     const ctx = canvas.getContext('2d')!
-    const W = SIZE * 2
-    const H = SIZE * 2
-    const frames: HTMLImageElement[] = []
+    const dpr = window.devicePixelRatio || 2
+    const W = SIZE * dpr
+    const H = SIZE * dpr
+    canvas.width = W
+    canvas.height = H
 
+    const frames: HTMLImageElement[] = []
     for (let i = 0; i < TOTAL_FRAMES; i++) {
       const img = new Image()
-      const num = String(i).padStart(5, '0')
-      img.src = `${BASE}cat_intro/intro_${num}.png`
+      img.src = `${BASE}cat_intro/intro_${String(i).padStart(5, '0')}.png`
       img.onload = () => {
         loadedRef.current++
         if (loadedRef.current === TOTAL_FRAMES) startLoop()
@@ -53,18 +55,16 @@ export default function FloatingCat() {
   return (
     <div style={{
       position: 'fixed',
-      bottom: 70,
+      bottom: 80,
       right: 16,
       width: SIZE,
       height: SIZE,
-      zIndex: 100,
+      zIndex: 999,
       cursor: 'pointer',
     }}>
       <canvas
         ref={canvasRef}
-        width={SIZE * 2}
-        height={SIZE * 2}
-        style={{ width: SIZE, height: SIZE }}
+        style={{ width: SIZE, height: SIZE, display: 'block' }}
       />
     </div>
   )
