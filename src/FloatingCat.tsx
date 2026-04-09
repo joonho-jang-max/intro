@@ -24,7 +24,7 @@ export default function FloatingCat() {
     const frames: HTMLImageElement[] = []
     for (let i = 0; i < TOTAL_FRAMES; i++) {
       const img = new Image()
-      img.src = `${BASE}cat_intro/intro_${String(i).padStart(5, '0')}.png`
+      img.src = `${BASE}cat_intro_fin/a_${String(i).padStart(5, '0')}.png`
       img.onload = () => {
         loadedRef.current++
         if (loadedRef.current === TOTAL_FRAMES) startLoop()
@@ -55,7 +55,7 @@ export default function FloatingCat() {
   return (
     <div style={{
       position: 'fixed',
-      bottom: 64,
+      bottom: 76,  /* toolbar 44 + 여백 16 + 16 */
       right: 16,
       width: SIZE,
       height: SIZE,
