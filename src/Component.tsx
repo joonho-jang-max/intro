@@ -54,8 +54,7 @@ function BenefitBanner() {
   const ref = useRef<HTMLDivElement>(null)
 
   return (
-    /* Benefit 전체: 264px, paddingTop 8 */
-    <div style={{ background: LIGHT_BG, paddingTop: 8, height: 264, overflow: 'hidden' }}>
+    <div style={{ background: LIGHT_BG, paddingTop: 8, paddingBottom: 8 }}>
       <div
         ref={ref}
         style={{
@@ -65,15 +64,16 @@ function BenefitBanner() {
           scrollbarWidth: 'none',
           gap: 8,
           paddingLeft: 16,
-          height: 256,
+          paddingRight: 16,
+          scrollPaddingLeft: 16,
         }}
       >
         {SLIDES.map((slide, i) => (
           <div key={i} style={{
             position: 'relative',
             flexShrink: 0,
-            width: 342,
-            height: 256,
+            width: 'calc(100% - 32px)',
+            aspectRatio: '342/256',
             borderRadius: 4,
             overflow: 'hidden',
             scrollSnapAlign: 'start',
@@ -89,7 +89,6 @@ function BenefitBanner() {
                 background: '#ff2d78', color: WHITE, fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 20,
               }}>참여하기</span>
             </>}
-            {/* 페이지 인디케이터 */}
             <span style={{
               position: 'absolute', bottom: 8, right: 10,
               background: 'rgba(60,30,100,0.4)', color: WHITE,
@@ -200,6 +199,11 @@ export default function Component() {
       <BenefitBanner />
       <BookSection />
       <ShortcutRow />
+      <BookSection />
+      <BookSection />
+      <BookSection />
+      <BookSection />
+      <BookSection />
       <BottomNav />
     </div>
   )
