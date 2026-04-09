@@ -110,13 +110,13 @@ export default function FloatingCat() {
           <span style={textStyle}>일이삼사오육칠팔구십</span>
           <div style={{
             position: 'absolute',
-            bottom: -7,
-            right: 24,
-            width: 14,
-            height: 14,
+            bottom: -4,
+            right: 27,   /* cat 중앙(31px) - 4px */
+            width: 8,
+            height: 8,
             background: '#111',
             transform: 'rotate(45deg)',
-            borderRadius: 0.84,
+            borderRadius: '0 0 1px 0',  /* 아래 꼭짓점(tip)만 */
           }}/>
         </div>
       )}
