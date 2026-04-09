@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 const TOTAL_FRAMES = 156
 const FPS = 24
 const BASE = import.meta.env.BASE_URL
-const DISPLAY_SIZE = 120
+const DISPLAY_SIZE = 58
 
 export default function FloatingCat() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
