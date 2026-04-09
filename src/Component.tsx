@@ -14,29 +14,14 @@ const GREEN    = '#16a34a'
 /* ── GNB ──────────────────────────────── */
 function GNB() {
   return (
-    <div style={{ background: NAV, padding: '0 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 46 }}>
+    <div style={{ background: NAV, padding: '0 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 44 }}>
       {/* NOVEL / COMIX  —  18px w700 */}
       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
         <span style={{ color: WHITE, fontSize: 18, fontWeight: 700, letterSpacing: -0.3 }}>NOVEL</span>
         <span style={{ color: '#555', fontSize: 18, fontWeight: 700 }}>COMIX</span>
       </div>
-      {/* 액션 아이콘 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        {/* 무료쿠키! 말풍선 + 쿠키 아이콘 (Figma 추출 이미지) */}
-        <img src={`${BASE}figma/gnb_tooltip.png`} style={{ height: 28, width: 'auto' }} alt="무료쿠키"/>
-        {/* 알림 벨 */}
-        <button style={{ background: 'none', border: 'none', padding: '4px 5px', cursor: 'pointer', display: 'flex' }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
-          </svg>
-        </button>
-        {/* 마이 */}
-        <button style={{ background: 'none', border: 'none', padding: '4px 5px', cursor: 'pointer', display: 'flex' }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-            <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z"/>
-          </svg>
-        </button>
-      </div>
+      {/* 액션 아이콘 — Figma 추출 이미지 */}
+      <img src={`${BASE}figma/gnb_actions.png`} style={{ height: 28, width: 'auto' }} alt="gnb actions"/>
     </div>
   )
 }
@@ -78,7 +63,7 @@ function BenefitBanner() {
   }
 
   return (
-    <div style={{ background: NAV, paddingBottom: 8 }}>
+    <div style={{ background: LIGHT_BG, paddingBottom: 8 }}>
       {/* 스크롤 컨테이너 */}
       <div
         ref={ref}
@@ -91,13 +76,14 @@ function BenefitBanner() {
           gap: 8,
           paddingLeft: 16,
           paddingRight: 16,
+          paddingTop: 12,
         }}
       >
         {SLIDES.map((slide, i) => (
           <div key={i} style={{
             position: 'relative',
             flexShrink: 0,
-            width: 'calc(100% - 32px)',  /* 342/375 ≈ 16px 양쪽 마진 */
+            width: 'calc(100% - 32px)',
             borderRadius: 4,
             overflow: 'hidden',
             scrollSnapAlign: 'start',
@@ -128,7 +114,7 @@ function BenefitBanner() {
         {SLIDES.map((_, i) => (
           <div key={i} style={{
             width: i === cur ? 14 : 6, height: 4, borderRadius: 2,
-            background: i === cur ? WHITE : 'rgba(255,255,255,0.3)',
+            background: i === cur ? DARK : 'rgba(0,0,0,0.2)',
             transition: 'width 0.2s',
           }}/>
         ))}
@@ -230,7 +216,7 @@ function BottomNav() {
       icon: <svg width="24" height="24" viewBox="0 0 24 24" fill={GRAY}><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg> },
   ]
   return (
-    <div style={{ position: 'sticky', bottom: 0, background: WHITE, borderTop: '1px solid #e5e5e5', display: 'flex', padding: '10px 0 24px', zIndex: 10 }}>
+    <div style={{ position: 'sticky', bottom: 0, background: WHITE, borderTop: '1px solid #e5e5e5', display: 'flex', height: 50, alignItems: 'flex-start', paddingTop: 8, zIndex: 10 }}>
       {items.map((item, i) => (
         <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, cursor: 'pointer' }}>
           {item.icon}
@@ -245,15 +231,13 @@ function BottomNav() {
 export default function Component() {
   const [activeTab, setActiveTab] = useState(0)
   return (
-    <div style={{ background: '#1a1a1a', minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
-      <div style={{ width: '100%', maxWidth: 375, background: LIGHT_BG, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-        <GNB />
-        <TabBar active={activeTab} setActive={setActiveTab} />
-        <BenefitBanner />
-        <BookSection />
-        <ShortcutRow />
-        <BottomNav />
-      </div>
+    <div style={{ background: LIGHT_BG, minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+      <GNB />
+      <TabBar active={activeTab} setActive={setActiveTab} />
+      <BenefitBanner />
+      <BookSection />
+      <ShortcutRow />
+      <BottomNav />
     </div>
   )
 }
