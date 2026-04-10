@@ -5,6 +5,10 @@ const TARGET = 1221
 const DIGIT_H = 42
 const FPS = 24
 
+// 프레임 기준 (statusbar 50px 제거 후)
+const FW = 375
+const FH = 418  // 468 - 50
+
 const IDLE_FRAMES = Array.from({ length: 17 }, (_, i) => i + 1)
 const ACTION_FRAMES = Array.from({ length: 32 }, (_, i) => i + 18)  // 18~49
 
@@ -121,68 +125,134 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
     }
   }
 
+  // statusbar 제거 후 y좌표 = 원래y - 50
+  // 고양이(A_high-end): x=111, y=61-50=11, w=153, h=238
+  // uinon badge: x=123, y=221.6-50=171.6, w=134, h=37.4
+  // mi: x=273, y=286-50=236, w=86, h=71
+  // 현재쿠키조각 frame: x=16, y=290-50=240, w=135, h=60
+  // Button_R: x=16, y=371-50=321, w=343, h=48
+
   return (
     <div style={{
       width: '100%',
       minHeight: '100vh',
       background: '#fff',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      overflow: 'hidden',
     }}>
-      {/* Nav */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        height: 44,
-        padding: '0 16px',
-        borderBottom: '1px solid #f0f0f0',
-      }}>
-        <button onClick={onBack} style={{
-          background: 'none', border: 'none', cursor: 'pointer',
-          padding: '0 8px 0 0', display: 'flex', alignItems: 'center',
-        }}>
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <path d="M18 6L10 14L18 22" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        <span style={{ fontSize: 16, fontWeight: 600 }}>리워드</span>
-        <span style={{ marginLeft: 'auto', fontSize: 15, fontWeight: 500, color: '#555' }}>내역보기</span>
-      </div>
+      {/* 전체를 비율 컨테이너로 감싸기 */}
+      <div style={{ position: 'relative', width: '100%' }}>
 
-      {/* 고양이 캔버스: 가운데 정렬 */}
-      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 24 }}>
+        {/* 배경이미지: cinema_4d, 원래 frame보다 넓어서 overflow - 양쪽 삐져나옴 */}
+        <img
+          src={`${BASE}figma/reward_bg.png`}
+          style={{
+            position: 'absolute',
+            left: `${(-52 / FW) * 100}%`,
+            top: 0,
+            width: `${(478 / FW) * 100}%`,
+            display: 'block',
+            pointerEvents: 'none',
+          }}
+          alt=""
+        />
+
+        {/* 높이 확보용 spacer: FH/FW 비율 */}
+        <div style={{ paddingTop: `${(FH / FW) * 100}%` }} />
+
+        {/* Nav: y=0 (원래 50, statusbar 제거) */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: `${(44 / FH) * 100}%`,
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 16px',
+        }}>
+          <button onClick={onBack} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: '0 8px 0 0', display: 'flex', alignItems: 'center',
+          }}>
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <path d="M18 6L10 14L18 22" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <span style={{ fontSize: 16, fontWeight: 600 }}>리워드</span>
+          <span style={{ marginLeft: 'auto', fontSize: 15, fontWeight: 500, color: '#555' }}>내역보기</span>
+        </div>
+
+        {/* 고양이 캔버스: x=111, y=11, w=153, h=238 */}
         <canvas ref={canvasRef} style={{
-          width: '50%',
-          maxWidth: 200,
+          position: 'absolute',
+          left: `${(111 / FW) * 100}%`,
+          top: `${(11 / FH) * 100}%`,
+          width: `${(153 / FW) * 100}%`,
           display: 'block',
         }} />
-      </div>
 
-      {/* 현재 쿠키조각 + 숫자 */}
-      <div style={{ padding: '20px 16px 0' }}>
-        <div style={{ fontSize: 15, fontWeight: 600, color: '#000', letterSpacing: -0.15, marginBottom: 4 }}>
-          현재 쿠키조각
-        </div>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <SlotNumber value={TARGET} />
-          <span style={{ fontSize: 14, fontWeight: 700, color: '#000', lineHeight: `${DIGIT_H}px` }}>/100개</span>
-        </div>
-      </div>
+        {/* uinon badge (쿠키 30개 수령 완료!): x=123, y=171.6, w=134, h=37.4 */}
+        <img
+          src={`${BASE}figma/reward_badge.png`}
+          style={{
+            position: 'absolute',
+            left: `${(123 / FW) * 100}%`,
+            top: `${(171.6 / FH) * 100}%`,
+            width: `${(134 / FW) * 100}%`,
+            display: 'block',
+            pointerEvents: 'none',
+          }}
+          alt=""
+        />
 
-      {/* 쿠키로 교환하기 버튼 */}
-      <div style={{ padding: '24px 16px 0' }}>
-        <button onClick={handleButtonClick} style={{
-          width: '100%',
-          height: 48,
-          background: '#111',
-          color: '#fff',
-          fontSize: 15,
-          fontWeight: 700,
-          border: 'none',
-          borderRadius: 12,
-          cursor: 'pointer',
+        {/* mi (시작해볼까): x=273, y=236, w=86, h=71 */}
+        <img
+          src={`${BASE}figma/reward_mi.png`}
+          style={{
+            position: 'absolute',
+            left: `${(273 / FW) * 100}%`,
+            top: `${(236 / FH) * 100}%`,
+            width: `${(86 / FW) * 100}%`,
+            display: 'block',
+            pointerEvents: 'none',
+          }}
+          alt=""
+        />
+
+        {/* 현재 쿠키조각 레이블 + 슬롯 숫자: x=16, y=240 */}
+        <div style={{
+          position: 'absolute',
+          left: `${(16 / FW) * 100}%`,
+          top: `${(240 / FH) * 100}%`,
         }}>
-          쿠키로 교환하기
-        </button>
+          <div style={{ fontSize: 15, fontWeight: 600, color: '#000', letterSpacing: -0.15, lineHeight: '18px', marginBottom: 4 }}>
+            현재 쿠키조각
+          </div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+            <SlotNumber value={TARGET} />
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#000', lineHeight: `${DIGIT_H}px` }}>/100개</span>
+          </div>
+        </div>
+
+        {/* Button_R: x=16, y=321, w=343, h=48 */}
+        <div
+          onClick={handleButtonClick}
+          style={{
+            position: 'absolute',
+            left: `${(16 / FW) * 100}%`,
+            top: `${(321 / FH) * 100}%`,
+            width: `${(343 / FW) * 100}%`,
+            cursor: 'pointer',
+          }}
+        >
+          <img
+            src={`${BASE}figma/reward_button.png`}
+            style={{ width: '100%', display: 'block' }}
+            alt="쿠키로 교환하기"
+          />
+        </div>
+
       </div>
     </div>
   )
