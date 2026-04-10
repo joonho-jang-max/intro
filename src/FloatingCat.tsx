@@ -84,7 +84,7 @@ export default function FloatingCat() {
         padding: '6px 12px',
         borderRadius: 20,
         whiteSpace: 'nowrap',
-        marginBottom: 10,
+        marginBottom: 6.5,  /* 꼬리 절반 4px + gap 2.5px */
         opacity: bubbleVisible ? 1 : 0,
         transition: 'opacity 0.3s ease',
         pointerEvents: bubbleVisible ? 'auto' : 'none',
@@ -92,10 +92,10 @@ export default function FloatingCat() {
         일이삼사오육칠팔구십
         <div style={{
           position: 'absolute',
-          bottom: -4,
-          right: 27,
-          width: 8,
-          height: 8,
+          bottom: -3,
+          right: 28,   /* cat 중앙 31px - 3px */
+          width: 6,
+          height: 4,
           background: '#111',
           transform: 'rotate(45deg)',
           borderRadius: '0 0 1px 0',

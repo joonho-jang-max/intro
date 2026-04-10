@@ -19,8 +19,12 @@ function GNB() {
         <span style={{ color: WHITE, fontSize: 18, fontWeight: 700, letterSpacing: -0.3 }}>NOVEL</span>
         <span style={{ color: '#555', fontSize: 18, fontWeight: 700 }}>COMIX</span>
       </div>
-      {/* 액션 아이콘 — Figma 추출 이미지 */}
-      <img src={`${BASE}figma/gnb_actions.png`} style={{ height: 28, width: 'auto' }} alt="gnb actions"/>
+      {/* 액션 아이콘 — tooltip + alert + my */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+        <img src={`${BASE}figma/gnb_tooltip.png`} style={{ height: 28, width: 'auto' }} alt="tooltip"/>
+        <img src={`${BASE}figma/gnb_alert.png`}   style={{ width: 28, height: 28 }} alt="alert"/>
+        <img src={`${BASE}figma/gnb_my.png`}      style={{ width: 28, height: 28 }} alt="my"/>
+      </div>
     </div>
   )
 }
@@ -46,8 +50,9 @@ function TabBar({ active, setActive }: { active: number; setActive: (i: number) 
 
 /* ── BenefitBanner  —  플리킹 캐러셀, r=4 */
 const SLIDES = [
-  { src: 'cookie2.png', showBadges: true },
-  { src: 'cookie3.png', showBadges: false },
+  { src: 'cookie1.png' },
+  { src: 'cookie2.png' },
+  { src: 'cookie3.png' },
 ]
 
 function BenefitBanner() {
@@ -79,16 +84,6 @@ function BenefitBanner() {
             scrollSnapAlign: 'start',
           }}>
             <img src={`${BASE}figma/${slide.src}`} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} alt=""/>
-            {slide.showBadges && <>
-              <span style={{
-                position: 'absolute', top: 10, left: 10,
-                background: DARK, color: WHITE, fontSize: 9, fontWeight: 700, padding: '3px 7px', borderRadius: 4,
-              }}>NEW</span>
-              <span style={{
-                position: 'absolute', top: 10, right: 10,
-                background: '#ff2d78', color: WHITE, fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 20,
-              }}>참여하기</span>
-            </>}
             <span style={{
               position: 'absolute', bottom: 8, right: 10,
               background: 'rgba(60,30,100,0.4)', color: WHITE,
