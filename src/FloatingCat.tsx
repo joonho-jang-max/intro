@@ -137,8 +137,8 @@ export default function FloatingCat() {
         {/* 빨간 닷: 말풍선 사라진 후 등장 */}
         <div style={{
           position: 'absolute',
-          top: 4,
-          right: 7,
+          top: 5,
+          right: 6,
           width: 8,
           height: 8,
           borderRadius: '50%',
