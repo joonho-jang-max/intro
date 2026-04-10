@@ -86,6 +86,7 @@ export default function FloatingCat() {
         whiteSpace: 'nowrap',
         marginBottom: 6,   /* 꼬리 절반 6px 노출 */
         boxShadow: 'none',
+        outline: '1px solid #00dc54',
         opacity: bubbleVisible ? 1 : 0,
         transition: 'opacity 0.3s ease',
         pointerEvents: bubbleVisible ? 'auto' : 'none',
@@ -96,17 +97,17 @@ export default function FloatingCat() {
           position: 'absolute',
           bottom: -6,
           right: 29,
-          width: 7,
+          width: 8,
           height: 6,
           overflow: 'hidden',
         }}>
           <svg
-            width="7" height="12"
-            viewBox="0 0 7 12"
+            width="8" height="12"
+            viewBox="0 0 8 12"
             style={{ position: 'absolute', top: -6, left: 0, display: 'block' }}
           >
             <path
-              d="M3.5 0.8 Q4.3 0 7 6 Q4.3 12 3.5 11.2 Q2.7 12 0 6 Q2.7 0 3.5 0.8 Z"
+              d="M4 0.8 Q4.8 0 8 6 Q4.8 12 4 11.2 Q3.2 12 0 6 Q3.2 0 4 0.8 Z"
               fill="#111"
             />
           </svg>
