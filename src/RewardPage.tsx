@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 const BASE = import.meta.env.BASE_URL
 const TARGET = 1221
-const DIGIT_H = 32
+const DIGIT_H = 42
 const FPS = 24
 
 const IDLE_FRAMES = Array.from({ length: 17 }, (_, i) => i + 1)
@@ -29,10 +29,10 @@ function SlotDigit({ target, delay }: { target: number; delay: number }) {
   for (let i = ROLL; i >= 0; i--) items.push(((target - i) % 10 + 10) % 10)
 
   return (
-    <div style={{ width: 32, height: DIGIT_H, overflow: 'hidden', display: 'inline-block', margin: '0 -4px' }}>
+    <div style={{ width: 32, height: DIGIT_H, overflow: 'hidden', display: 'inline-block', margin: '0 -6px' }}>
       <div ref={ref} style={{ transform: 'translateY(0)', willChange: 'transform' }}>
         {items.map((n, i) => (
-          <div key={i} style={{ height: DIGIT_H, lineHeight: `${DIGIT_H}px`, fontSize: 32, fontWeight: 700, color: '#121212', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif', textAlign: 'center' }}>{n}</div>
+          <div key={i} style={{ height: DIGIT_H, lineHeight: `${DIGIT_H}px`, fontSize: 42, fontWeight: 700, color: '#121212', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif', textAlign: 'center' }}>{n}</div>
         ))}
       </div>
     </div>
