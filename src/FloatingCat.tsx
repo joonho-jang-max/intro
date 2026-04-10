@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 const TOTAL_FRAMES = 156
 const FPS = 24
 const BASE = import.meta.env.BASE_URL
-const SIZE = 62
+const SIZE = 64
 
 export default function FloatingCat() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -84,21 +84,22 @@ export default function FloatingCat() {
         padding: '6px 12px',
         borderRadius: 20,
         whiteSpace: 'nowrap',
-        marginBottom: 6.5,  /* 꼬리 절반 4px + gap 2.5px */
+        marginBottom: 6,   /* 꼬리 절반 6px 노출 */
+        boxShadow: 'none',
         opacity: bubbleVisible ? 1 : 0,
         transition: 'opacity 0.3s ease',
         pointerEvents: bubbleVisible ? 'auto' : 'none',
       }}>
         일이삼사오육칠팔구십
+        {/* 꼬리: 6×12 마름모, 절반(6px)만 노출 */}
         <div style={{
           position: 'absolute',
-          bottom: -3,
-          right: 28,   /* cat 중앙 31px - 3px */
+          bottom: -6,
+          right: 29,   /* cat 중앙 32px - 3px(width/2) */
           width: 6,
-          height: 4,
+          height: 12,
           background: '#111',
-          transform: 'rotate(45deg)',
-          borderRadius: '0 0 1px 0',
+          clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
         }}/>
       </div>
       <canvas
