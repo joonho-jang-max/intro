@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 const TOTAL_FRAMES = 156
 const FPS = 24
 const BASE = import.meta.env.BASE_URL
 const SIZE = 64
+const SHRUNK_WIDTH = 88
 
 export default function FloatingCat({ onClick }: { onClick?: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -11,6 +12,11 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
   const imagesRef = useRef<HTMLImageElement[]>([])
   const loadedRef = useRef(0)
   const rafRef = useRef<number>(0)
+  const [shrunk, setShrunk] = useState(false)
+  const shrunkRef = useRef(false)
+  const pillRef = useRef<HTMLDivElement>(null)
+  const [pillWidth, setPillWidth] = useState<number | null>(null)
+  const [animReady, setAnimReady] = useState(false)
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -52,6 +58,26 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
     return () => cancelAnimationFrame(rafRef.current)
   }, [])
 
+  /* 초기 pill 너비 측정 후 애니메이션 활성화 */
+  useLayoutEffect(() => {
+    if (pillRef.current) {
+      setPillWidth(pillRef.current.offsetWidth)
+      requestAnimationFrame(() => setAnimReady(true))
+    }
+  }, [])
+
+  /* 스크롤 시 한번만 shrunk=true (되돌아오지 않음) */
+  useEffect(() => {
+    function onScroll() {
+      if (!shrunkRef.current) {
+        shrunkRef.current = true
+        setShrunk(true)
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
     <div style={{
       position: 'fixed',
@@ -63,34 +89,64 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
       flexDirection: 'column',
       alignItems: 'flex-end',
     }} onClick={onClick}>
-      <div style={{
-        position: 'relative',
-        background: '#111',
-        color: '#fff',
-        fontSize: 12,
-        fontWeight: 700,
-        fontFamily: '"Pretendard", -apple-system, BlinkMacSystemFont, sans-serif',
-        padding: '0 12px',
-        height: 28,
-        lineHeight: '26px',
-        paddingBottom: 2,
-        borderRadius: 20,
-        whiteSpace: 'nowrap',
-        marginBottom: 6,
-      }}>
-        일이삼사오육칠팔구십
-        {/* 우측 상단 알림 도트 */}
-        <div style={{
-          position: 'absolute',
-          top: 2,
-          right: 2,
-          width: 6,
-          height: 6,
-          borderRadius: '50%',
-          background: '#FF2F5D',
-          boxShadow: '0 0 0 1.5px #fff',
-        }}/>
-        {/* 꼬리: 아래 절반만 노출 */}
+
+      {/* 말풍선 래퍼 (꼬리는 pill overflow 밖으로 분리) */}
+      <div style={{ position: 'relative', marginBottom: 6 }}>
+
+        {/* 알약 pill */}
+        <div ref={pillRef} style={{
+          position: 'relative',
+          background: '#111',
+          color: '#fff',
+          fontSize: 12,
+          fontWeight: 700,
+          fontFamily: '"Pretendard", -apple-system, BlinkMacSystemFont, sans-serif',
+          height: 28,
+          borderRadius: 20,
+          overflow: 'hidden',
+          width: shrunk ? SHRUNK_WIDTH : (pillWidth ?? undefined),
+          transition: animReady ? 'width 0.45s ease-in-out' : 'none',
+        }}>
+          {/* 원본 텍스트 */}
+          <span style={{
+            position: 'absolute',
+            top: 0,
+            left: 12,
+            lineHeight: '26px',
+            paddingBottom: 2,
+            whiteSpace: 'nowrap',
+            opacity: shrunk ? 0 : 1,
+            transition: 'opacity 0.2s ease-in-out',
+          }}>
+            일이삼사오육칠팔구십
+          </span>
+          {/* 리워드센터 텍스트 */}
+          <span style={{
+            position: 'absolute',
+            top: 0,
+            left: 12,
+            lineHeight: '26px',
+            paddingBottom: 2,
+            whiteSpace: 'nowrap',
+            opacity: shrunk ? 1 : 0,
+            transition: shrunk ? 'opacity 0.25s ease-in-out 0.3s' : 'none',
+          }}>
+            리워드센터
+          </span>
+          {/* 우측 상단 알림 도트 */}
+          <div style={{
+            position: 'absolute',
+            top: 1.5,
+            right: 1.5,
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            background: '#FF2F5D',
+            boxShadow: '0 0 0 1.5px #fff',
+          }}/>
+        </div>
+
+        {/* 꼬리 (pill overflow 바깥) */}
         <div style={{
           position: 'absolute',
           bottom: -5,
@@ -111,7 +167,9 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
           </svg>
         </div>
       </div>
-      <div style={{ position: 'relative', width: SIZE, height: SIZE }}>
+
+      {/* 고양이 캔버스 */}
+      <div style={{ width: SIZE, height: SIZE }}>
         <canvas
           ref={canvasRef}
           style={{ width: SIZE, height: SIZE, display: 'block' }}
