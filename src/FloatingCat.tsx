@@ -88,29 +88,41 @@ export default function FloatingCat() {
         whiteSpace: 'nowrap',
         marginBottom: 6,   /* 꼬리 절반 6px 노출 */
         boxShadow: 'none',
-        outline: '1px solid #00dc54',
+        border: '1px solid #00dc54',
         opacity: bubbleVisible ? 1 : 0,
         transition: 'opacity 0.3s ease',
         pointerEvents: bubbleVisible ? 'auto' : 'none',
       }}>
         일이삼사오육칠팔구십
-        {/* 꼬리: 컨테이너로 위 절반 숨기고 아래 절반만 노출 */}
+        {/* 버블 하단 border 연결부 가리개 */}
         <div style={{
           position: 'absolute',
-          bottom: -6,
-          right: 29,
-          width: 8,
-          height: 6,
+          bottom: -1,
+          right: 28,
+          width: 10,
+          height: 2,
+          background: '#111',
+        }}/>
+        {/* 꼬리: 아래 절반만 노출, stroke로 외곽선 연결 */}
+        <div style={{
+          position: 'absolute',
+          bottom: -7,
+          right: 28,
+          width: 10,
+          height: 7,
           overflow: 'hidden',
         }}>
           <svg
-            width="8" height="12"
-            viewBox="0 0 8 12"
-            style={{ position: 'absolute', top: -6, left: 0, display: 'block' }}
+            width="10" height="14"
+            viewBox="0 0 10 14"
+            style={{ position: 'absolute', top: -7, left: 0, display: 'block' }}
           >
             <path
-              d="M4 0.8 Q4.8 0 8 6 Q4.8 12 4 11.2 Q3.2 12 0 6 Q3.2 0 4 0.8 Z"
+              d="M5 1 Q5.8 0 10 7 Q5.8 14 5 13 Q4.2 14 0 7 Q4.2 0 5 1 Z"
               fill="#111"
+              stroke="#00dc54"
+              strokeWidth="1"
+              strokeLinejoin="round"
             />
           </svg>
         </div>
