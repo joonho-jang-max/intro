@@ -1,51 +1,67 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const BASE = import.meta.env.BASE_URL
 const TARGET = 1221
+const DIGIT_H = 42  // font-size와 맞춤
 
-/* 자릿수별 시간차 플립 */
-function FlipDigit({ digit, delay }: { digit: string; delay: number }) {
-  const [show, setShow] = useState(false)
-  const [flipping, setFlipping] = useState(false)
+/* 슬롯머신 스타일 단일 자릿수 */
+function SlotDigit({ target, delay }: { target: number; delay: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [started, setStarted] = useState(false)
 
   useEffect(() => {
-    const t = setTimeout(() => {
-      setFlipping(true)
-      setTimeout(() => {
-        setShow(true)
-        setFlipping(false)
-      }, 150)
-    }, delay)
+    const t = setTimeout(() => setStarted(true), delay)
     return () => clearTimeout(t)
   }, [delay])
 
+  useEffect(() => {
+    if (!started || !ref.current) return
+    // 0→target 까지 스크롤 (숫자를 위에서 아래로 쌓아두고 위로 스크롤)
+    const totalItems = 10 + target + 1  // 0~9 패딩 + 0~target
+    const finalOffset = -(totalItems - 1) * DIGIT_H
+    ref.current.style.transition = `transform 0.6s cubic-bezier(0.17, 0.67, 0.35, 1.0)`
+    ref.current.style.transform = `translateY(${finalOffset}px)`
+  }, [started, target])
+
+  // 0~9 * 2 + 0~target 으로 충분한 숫자 나열
+  const items: number[] = []
+  for (let i = 0; i < 10; i++) items.push(i)
+  for (let i = 0; i <= target; i++) items.push(i)
+
   return (
-    <span style={{
+    <div style={{
+      width: 28,
+      height: DIGIT_H,
+      overflow: 'hidden',
       display: 'inline-block',
-      fontSize: 42,
-      fontWeight: 700,
-      color: '#121212',
-      fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
-      transform: flipping ? 'rotateX(90deg)' : 'rotateX(0deg)',
-      transition: 'transform 0.15s ease',
-      transformOrigin: 'center center',
-      perspective: 400,
-      minWidth: digit === ',' ? 'auto' : 28,
-      textAlign: 'center',
     }}>
-      {show ? digit : '0'}
-    </span>
+      <div ref={ref} style={{ transform: 'translateY(0)', willChange: 'transform' }}>
+        {items.map((n, i) => (
+          <div key={i} style={{
+            height: DIGIT_H,
+            lineHeight: `${DIGIT_H}px`,
+            fontSize: 42,
+            fontWeight: 700,
+            color: '#121212',
+            fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+            textAlign: 'center',
+          }}>
+            {n}
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 
-function FlipNumber() {
-  const digits = TARGET.toLocaleString().split('')
+function SlotNumber({ value }: { value: number }) {
+  const digits = String(value).split('').map(Number)
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'baseline' }}>
+    <div style={{ display: 'inline-flex', alignItems: 'center' }}>
       {digits.map((d, i) => (
-        <FlipDigit key={i} digit={d} delay={i * 120}/>
+        <SlotDigit key={i} target={d} delay={i * 100} />
       ))}
-    </span>
+    </div>
   )
 }
 
@@ -77,19 +93,31 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
         <span style={{ marginLeft: 'auto', fontSize: 15, fontWeight: 500, color: '#555' }}>내역보기</span>
       </div>
 
-      {/* 쿠키 개수 */}
-      <div style={{ padding: '24px 20px 0' }}>
-        <div style={{ fontSize: 15, fontWeight: 600, color: '#000', marginBottom: 8 }}>현재 쿠키조각</div>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <FlipNumber />
-          <span style={{ fontSize: 14, fontWeight: 700, color: '#000' }}>/100개</span>
+      {/* 디자인 이미지 위에 숫자 오버레이 */}
+      <div style={{ position: 'relative' }}>
+        <img
+          src={`${BASE}figma/fin_page.png`}
+          style={{ width: '100%', display: 'block' }}
+          alt="reward"
+        />
+        {/* 1221 위치: rel_x=16 rel_y=308, frame h=468
+            이미지 비율에 맞게 % 로 */}
+        <div style={{
+          position: 'absolute',
+          top: `${(308 / 468) * 100}%`,
+          left: `${(16 / 375) * 100}%`,
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: 4,
+        }}>
+          <SlotNumber value={TARGET} />
+          <span style={{
+            fontSize: 14,
+            fontWeight: 700,
+            color: '#000',
+            lineHeight: `${DIGIT_H}px`,
+          }}>/100개</span>
         </div>
-        <div style={{ fontSize: 13, fontWeight: 600, color: '#000', marginTop: 8 }}>쿠키 30개 수령 완료!</div>
-      </div>
-
-      {/* 배경 이미지 */}
-      <div style={{ marginTop: 16 }}>
-        <img src={`${BASE}figma/fin_page.png`} style={{ width: '100%', display: 'block' }} alt="reward"/>
       </div>
     </div>
   )

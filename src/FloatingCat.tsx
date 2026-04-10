@@ -79,7 +79,7 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
         background: '#111',
         color: '#fff',
         fontSize: 12,
-        fontWeight: 500,
+        fontWeight: 700,
         fontFamily: '"Pretendard", -apple-system, BlinkMacSystemFont, sans-serif',
         padding: '0 12px',
         height: 28,
