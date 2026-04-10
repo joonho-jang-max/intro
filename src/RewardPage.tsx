@@ -140,6 +140,15 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
           alt="reward"
         />
 
+        {/* 고양이 캔버스: 정적 고양이 위치(1x: x=85-260, y=70-273), 텍스트보다 아래 레이어 */}
+        <canvas ref={canvasRef} style={{
+          position: 'absolute',
+          left: `${(85 / 375) * 100}%`,
+          top: `${(70 / 468) * 100}%`,
+          width: `${(175 / 375) * 100}%`,
+          display: 'block',
+        }} />
+
         {/* 뒤로가기 투명 터치 영역 */}
         <div onClick={onBack} style={{
           position: 'absolute',
@@ -148,16 +157,6 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
           width: `${(44 / 375) * 100}%`,
           height: `${(44 / 468) * 100}%`,
           cursor: 'pointer',
-        }} />
-
-        {/* 고양이 워크 캔버스: 쿠키 30개 수령완료! 아래, 가운데 정렬, 비율 540:960 */}
-        <canvas ref={canvasRef} style={{
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          top: `${(251 / 468) * 100}%`,
-          width: `${(180 / 375) * 100}%`,
-          display: 'block',
         }} />
 
         {/* 쿠키로교환하기 버튼 투명 오버레이 */}
