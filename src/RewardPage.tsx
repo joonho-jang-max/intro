@@ -5,12 +5,9 @@ const TARGET = 1221
 const DIGIT_H = 42
 const FPS = 24
 
-// 아이들: 1~17 루프 / 액션: 18~20, 22~49 (21번 없음)
+// 아이들: 1~17 루프 / 액션: 18~49 (21 포함)
 const IDLE_FRAMES = Array.from({ length: 17 }, (_, i) => i + 1)
-const ACTION_FRAMES = [
-  ...Array.from({ length: 3 }, (_, i) => i + 18),   // 18,19,20
-  ...Array.from({ length: 28 }, (_, i) => i + 22),   // 22~49
-]
+const ACTION_FRAMES = Array.from({ length: 32 }, (_, i) => i + 18)  // 18~49
 
 function SlotDigit({ target, delay }: { target: number; delay: number }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -78,9 +75,10 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
     const canvas = canvasRef.current!
     const dpr = window.devicePixelRatio || 2
     const displayW = canvas.offsetWidth
-    const displayH = canvas.offsetHeight
+    const displayH = displayW * (960 / 540)  // 정확한 비율 유지
     canvas.width = displayW * dpr
     canvas.height = displayH * dpr
+    canvas.style.height = `${displayH}px`
     const ctx = canvas.getContext('2d')!
 
     const allFrameNums = [...IDLE_FRAMES, ...ACTION_FRAMES]
@@ -152,13 +150,13 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
           cursor: 'pointer',
         }} />
 
-        {/* 고양이 워크 캔버스: 배경 고양이 위치(x=85,y=0,212×310) */}
+        {/* 고양이 워크 캔버스: 쿠키 30개 수령완료! 아래, 가운데 정렬, 비율 540:960 */}
         <canvas ref={canvasRef} style={{
           position: 'absolute',
-          left: `${(85 / 375) * 100}%`,
-          top: 0,
-          width: `${(212 / 375) * 100}%`,
-          height: `${(310 / 468) * 100}%`,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          top: `${(251 / 468) * 100}%`,
+          width: `${(180 / 375) * 100}%`,
           display: 'block',
         }} />
 
