@@ -139,7 +139,7 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
       </div>
 
       {/* ── 하단 섹션 ── */}
-      <div style={{ padding: '0 16px 0', position: 'relative' }}>
+      <div style={{ padding: '0 16px 0', position: 'relative', marginTop: -60 }}>
         {/* 현재 쿠키조각 레이블 */}
         <div style={{ fontSize: 15, fontWeight: 600, color: '#000', letterSpacing: -0.15, lineHeight: '18px', marginBottom: 2 }}>
           현재 쿠키조각
