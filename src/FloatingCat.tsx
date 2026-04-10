@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-const TOTAL_FRAMES = 156
+const TOTAL_FRAMES = 96
 const FPS = 24
 const BASE = import.meta.env.BASE_URL
 const SIZE = 64
@@ -139,8 +139,8 @@ export default function FloatingCat() {
           position: 'absolute',
           top: 4,
           right: 7,
-          width: 6,
-          height: 6,
+          width: 8,
+          height: 8,
           borderRadius: '50%',
           background: '#FF2F5D',
           opacity: bubbleVisible ? 0 : 1,
