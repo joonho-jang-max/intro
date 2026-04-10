@@ -81,7 +81,9 @@ export default function FloatingCat() {
         fontSize: 12,
         fontWeight: 600,
         fontFamily: '"Pretendard", -apple-system, BlinkMacSystemFont, sans-serif',
-        padding: '6px 12px',
+        padding: '0 12px',
+        height: 28,
+        lineHeight: '28px',
         borderRadius: 20,
         whiteSpace: 'nowrap',
         marginBottom: 6,   /* 꼬리 절반 6px 노출 */
