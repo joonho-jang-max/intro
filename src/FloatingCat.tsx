@@ -93,7 +93,7 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
         {/* 꼬리: 아래 절반만 노출 */}
         <div style={{
           position: 'absolute',
-          bottom: -7,
+          bottom: -5,
           right: 28,
           width: 10,
           height: 7,
