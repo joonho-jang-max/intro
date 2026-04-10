@@ -139,13 +139,13 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
       </div>
 
       {/* ── 하단 섹션 ── */}
-      <div style={{ padding: '8px 16px 0', position: 'relative' }}>
+      <div style={{ padding: '0 16px 0', position: 'relative' }}>
         {/* 현재 쿠키조각 레이블 */}
         <div style={{ fontSize: 15, fontWeight: 600, color: '#000', letterSpacing: -0.15, lineHeight: '18px', marginBottom: 2 }}>
           현재 쿠키조각
         </div>
         {/* 1221 + /100개 + mi 같은 줄 */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
             <SlotNumber value={TARGET} />
             <span style={{ fontSize: 14, fontWeight: 700, color: '#000', lineHeight: `${DIGIT_H}px` }}>/100개</span>
