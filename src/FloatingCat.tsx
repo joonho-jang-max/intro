@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 const TOTAL_FRAMES = 156
 const FPS = 24
@@ -11,8 +11,6 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
   const imagesRef = useRef<HTMLImageElement[]>([])
   const loadedRef = useRef(0)
   const rafRef = useRef<number>(0)
-  const [bubbleVisible, setBubbleVisible] = useState(true)
-  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -54,15 +52,6 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
     return () => cancelAnimationFrame(rafRef.current)
   }, [])
 
-  useEffect(() => {
-    function onScroll() {
-      setBubbleVisible(false)
-      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   return (
     <div style={{
       position: 'fixed',
@@ -88,9 +77,6 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
         borderRadius: 20,
         whiteSpace: 'nowrap',
         marginBottom: 6,
-        opacity: bubbleVisible ? 1 : 0,
-        transition: 'opacity 0.3s ease',
-        pointerEvents: bubbleVisible ? 'auto' : 'none',
       }}>
         일이삼사오육칠팔구십
         {/* 우측 상단 알림 도트 */}
@@ -125,24 +111,11 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
           </svg>
         </div>
       </div>
-      {/* 캔버스 + 빨간 닷 */}
       <div style={{ position: 'relative', width: SIZE, height: SIZE }}>
         <canvas
           ref={canvasRef}
           style={{ width: SIZE, height: SIZE, display: 'block' }}
         />
-        {/* 빨간 닷: 말풍선 사라진 후 등장 */}
-        <div style={{
-          position: 'absolute',
-          top: 5,
-          right: 6,
-          width: 8,
-          height: 8,
-          borderRadius: '50%',
-          background: '#FF2F5D',
-          opacity: bubbleVisible ? 0 : 1,
-          transition: 'opacity 0.3s ease',
-        }}/>
       </div>
     </div>
   )
