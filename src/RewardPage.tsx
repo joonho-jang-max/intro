@@ -188,7 +188,7 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
           position: 'absolute',
           left: `${(111 / FW) * 100}%`,
           top: `${(11 / FH) * 100}%`,
-          width: `${(153 / FW) * 100}%`,
+          width: `${(199 / FW) * 100}%`,
           display: 'block',
         }} />
 
