@@ -14,9 +14,11 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
   const rafRef = useRef<number>(0)
   const [shrunk, setShrunk] = useState(false)
   const shrunkRef = useRef(false)
+
+  // 너비 측정 및 transition 활성화
   const pillRef = useRef<HTMLDivElement>(null)
-  const [pillWidth, setPillWidth] = useState<number | null>(null)
-  const [animReady, setAnimReady] = useState(false)
+  const [initWidth, setInitWidth] = useState<number | null>(null)
+  const [canTransition, setCanTransition] = useState(false)
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -41,7 +43,6 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
 
     let last = 0
     const interval = 1000 / FPS
-
     function startLoop() {
       function tick(ts: number) {
         if (ts - last >= interval) {
@@ -54,19 +55,20 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
       }
       rafRef.current = requestAnimationFrame(tick)
     }
-
     return () => cancelAnimationFrame(rafRef.current)
   }, [])
 
-  /* 초기 pill 너비 측정 후 애니메이션 활성화 */
+  /* 1) 자연 너비 측정 → 2) px로 고정 → 3) transition 활성화 */
   useLayoutEffect(() => {
-    if (pillRef.current) {
-      setPillWidth(pillRef.current.offsetWidth)
-      requestAnimationFrame(() => setAnimReady(true))
-    }
+    if (!pillRef.current) return
+    const w = pillRef.current.offsetWidth
+    setInitWidth(w)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setCanTransition(true))
+    })
   }, [])
 
-  /* 스크롤 시 한번만 shrunk=true (되돌아오지 않음) */
+  /* 스크롤 시 한번만 줄어듦 */
   useEffect(() => {
     function onScroll() {
       if (!shrunkRef.current) {
@@ -77,6 +79,8 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const pillWidth = shrunk ? SHRUNK_WIDTH : (initWidth ?? undefined)
 
   return (
     <div style={{
@@ -90,10 +94,10 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
       alignItems: 'flex-end',
     }} onClick={onClick}>
 
-      {/* 말풍선 래퍼 (꼬리는 pill overflow 밖으로 분리) */}
+      {/* 말풍선 + 꼬리 + 레드닷 감싸는 wrapper */}
       <div style={{ position: 'relative', marginBottom: 6 }}>
 
-        {/* 알약 pill */}
+        {/* 알약 pill (overflow:hidden으로 텍스트 클리핑) */}
         <div ref={pillRef} style={{
           position: 'relative',
           background: '#111',
@@ -104,8 +108,14 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
           height: 28,
           borderRadius: 20,
           overflow: 'hidden',
-          width: shrunk ? SHRUNK_WIDTH : (pillWidth ?? undefined),
-          transition: animReady ? 'width 0.45s ease-in-out' : 'none',
+          whiteSpace: 'nowrap',
+          /* 측정 전: max-content로 자연 너비, 측정 후: px로 고정/애니메이션 */
+          width: initWidth === null ? 'max-content' : pillWidth,
+          padding: '0 12px',
+          paddingBottom: 2,
+          lineHeight: '26px',
+          transition: canTransition ? 'width 0.45s ease-in-out' : 'none',
+          boxSizing: 'border-box',
         }}>
           {/* 원본 텍스트 */}
           <span style={{
@@ -120,7 +130,7 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
           }}>
             일이삼사오육칠팔구십
           </span>
-          {/* 리워드센터 텍스트 */}
+          {/* 리워드센터 텍스트 (shrunk 후 페이드인) */}
           <span style={{
             position: 'absolute',
             top: 0,
@@ -133,20 +143,26 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
           }}>
             리워드센터
           </span>
-          {/* 우측 상단 알림 도트 */}
-          <div style={{
-            position: 'absolute',
-            top: 1.5,
-            right: 1.5,
-            width: 6,
-            height: 6,
-            borderRadius: '50%',
-            background: '#FF2F5D',
-            boxShadow: '0 0 0 1.5px #fff',
-          }}/>
+          {/* 인라인 스페이서: 컨테이너 너비를 텍스트 기준으로 잡아줌 */}
+          <span style={{ visibility: 'hidden', pointerEvents: 'none' }}>
+            일이삼사오육칠팔구십
+          </span>
         </div>
 
-        {/* 꼬리 (pill overflow 바깥) */}
+        {/* 레드닷: pill overflow 밖 wrapper에 배치 */}
+        <div style={{
+          position: 'absolute',
+          top: 1.5,
+          right: 1.5,
+          width: 6,
+          height: 6,
+          borderRadius: '50%',
+          background: '#FF2F5D',
+          boxShadow: '0 0 0 1.5px #fff',
+          pointerEvents: 'none',
+        }}/>
+
+        {/* 꼬리 */}
         <div style={{
           position: 'absolute',
           bottom: -5,
@@ -155,11 +171,8 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
           height: 7,
           overflow: 'hidden',
         }}>
-          <svg
-            width="10" height="14"
-            viewBox="0 0 10 14"
-            style={{ position: 'absolute', top: -7, left: 0, display: 'block' }}
-          >
+          <svg width="10" height="14" viewBox="0 0 10 14"
+            style={{ position: 'absolute', top: -7, left: 0, display: 'block' }}>
             <path
               d="M5 1 Q5.8 0 10 7 Q5.8 14 5 13 Q4.2 14 0 7 Q4.2 0 5 1 Z"
               fill="#111"
@@ -170,10 +183,7 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
 
       {/* 고양이 캔버스 */}
       <div style={{ width: SIZE, height: SIZE }}>
-        <canvas
-          ref={canvasRef}
-          style={{ width: SIZE, height: SIZE, display: 'block' }}
-        />
+        <canvas ref={canvasRef} style={{ width: SIZE, height: SIZE, display: 'block' }} />
       </div>
     </div>
   )
