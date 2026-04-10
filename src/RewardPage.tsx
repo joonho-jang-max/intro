@@ -5,7 +5,6 @@ const TARGET = 1221
 const DIGIT_H = 42
 const FPS = 24
 
-// 아이들: 1~17 루프 / 액션: 18~49 (21 포함)
 const IDLE_FRAMES = Array.from({ length: 17 }, (_, i) => i + 1)
 const ACTION_FRAMES = Array.from({ length: 32 }, (_, i) => i + 18)  // 18~49
 
@@ -75,14 +74,13 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
     const canvas = canvasRef.current!
     const dpr = window.devicePixelRatio || 2
     const displayW = canvas.offsetWidth
-    const displayH = displayW * (960 / 540)  // 정확한 비율 유지
+    const displayH = displayW * (960 / 540)
     canvas.width = displayW * dpr
     canvas.height = displayH * dpr
     canvas.style.height = `${displayH}px`
     const ctx = canvas.getContext('2d')!
 
     const allFrameNums = [...IDLE_FRAMES, ...ACTION_FRAMES]
-
     allFrameNums.forEach(n => {
       const img = new Image()
       img.src = `${BASE}catwalk/cat_${n}.png`
@@ -95,7 +93,6 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
 
     let last = 0
     const interval = 1000 / FPS
-
     function startLoop() {
       function tick(ts: number) {
         if (ts - last >= interval) {
@@ -103,7 +100,6 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
           ctx.clearRect(0, 0, canvas.width, canvas.height)
           const img = imagesRef.current[frames[frameIdxRef.current]]
           if (img) ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-
           frameIdxRef.current++
           if (frameIdxRef.current >= frames.length) {
             if (modeRef.current === 'action') modeRef.current = 'idle'
@@ -115,7 +111,6 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
       }
       rafRef.current = requestAnimationFrame(tick)
     }
-
     return () => cancelAnimationFrame(rafRef.current)
   }, [])
 
@@ -133,73 +128,61 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
       background: '#fff',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     }}>
-      <div style={{ position: 'relative' }}>
-        <img
-          src={`${BASE}figma/fin_page.png`}
-          style={{ width: '100%', display: 'block' }}
-          alt="reward"
-        />
+      {/* Nav */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        height: 44,
+        padding: '0 16px',
+        borderBottom: '1px solid #f0f0f0',
+      }}>
+        <button onClick={onBack} style={{
+          background: 'none', border: 'none', cursor: 'pointer',
+          padding: '0 8px 0 0', display: 'flex', alignItems: 'center',
+        }}>
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M18 6L10 14L18 22" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+        <span style={{ fontSize: 16, fontWeight: 600 }}>리워드</span>
+        <span style={{ marginLeft: 'auto', fontSize: 15, fontWeight: 500, color: '#555' }}>내역보기</span>
+      </div>
 
-        {/* 고양이 캔버스: 정적 고양이 위치(1x: x=85-260, y=70-273), 텍스트보다 아래 레이어 */}
+      {/* 고양이 캔버스: 가운데 정렬 */}
+      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 24 }}>
         <canvas ref={canvasRef} style={{
-          position: 'absolute',
-          left: `${(85 / 375) * 100}%`,
-          top: `${(70 / 468) * 100}%`,
-          width: `${(175 / 375) * 100}%`,
+          width: '50%',
+          maxWidth: 200,
           display: 'block',
         }} />
+      </div>
 
-        {/* 뒤로가기 투명 터치 영역 */}
-        <div onClick={onBack} style={{
-          position: 'absolute',
-          top: `${(50 / 468) * 100}%`,
-          left: 0,
-          width: `${(44 / 375) * 100}%`,
-          height: `${(44 / 468) * 100}%`,
-          cursor: 'pointer',
-        }} />
-
-        {/* 쿠키로교환하기 버튼 투명 오버레이 */}
-        <div onClick={handleButtonClick} style={{
-          position: 'absolute',
-          top: `${(371 / 468) * 100}%`,
-          left: `${(16 / 375) * 100}%`,
-          width: `${(343 / 375) * 100}%`,
-          height: `${(48 / 468) * 100}%`,
-          cursor: 'pointer',
-        }} />
-
-        {/* 현재 쿠키조각 레이블 */}
-        <div style={{
-          position: 'absolute',
-          top: `${(290 / 468) * 100}%`,
-          left: `${(16 / 375) * 100}%`,
-          fontSize: 15,
-          fontWeight: 600,
-          color: '#000',
-          letterSpacing: -0.15,
-          lineHeight: '18px',
-        }}>
+      {/* 현재 쿠키조각 + 숫자 */}
+      <div style={{ padding: '20px 16px 0' }}>
+        <div style={{ fontSize: 15, fontWeight: 600, color: '#000', letterSpacing: -0.15, marginBottom: 4 }}>
           현재 쿠키조각
         </div>
-
-        {/* 1221 슬롯 숫자 */}
-        <div style={{
-          position: 'absolute',
-          top: `${(308 / 468) * 100}%`,
-          left: `${(16 / 375) * 100}%`,
-          display: 'flex',
-          alignItems: 'baseline',
-          gap: 4,
-        }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
           <SlotNumber value={TARGET} />
-          <span style={{
-            fontSize: 14,
-            fontWeight: 700,
-            color: '#000',
-            lineHeight: `${DIGIT_H}px`,
-          }}>/100개</span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#000', lineHeight: `${DIGIT_H}px` }}>/100개</span>
         </div>
+      </div>
+
+      {/* 쿠키로 교환하기 버튼 */}
+      <div style={{ padding: '24px 16px 0' }}>
+        <button onClick={handleButtonClick} style={{
+          width: '100%',
+          height: 48,
+          background: '#111',
+          color: '#fff',
+          fontSize: 15,
+          fontWeight: 700,
+          border: 'none',
+          borderRadius: 12,
+          cursor: 'pointer',
+        }}>
+          쿠키로 교환하기
+        </button>
       </div>
     </div>
   )
