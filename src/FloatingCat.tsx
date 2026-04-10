@@ -128,10 +128,25 @@ export default function FloatingCat() {
           </svg>
         </div>
       </div>
-      <canvas
-        ref={canvasRef}
-        style={{ width: SIZE, height: SIZE, display: 'block' }}
-      />
+      {/* 캔버스 + 빨간 닷 */}
+      <div style={{ position: 'relative', width: SIZE, height: SIZE }}>
+        <canvas
+          ref={canvasRef}
+          style={{ width: SIZE, height: SIZE, display: 'block' }}
+        />
+        {/* 빨간 닷: 말풍선 사라진 후 등장 */}
+        <div style={{
+          position: 'absolute',
+          top: 4,
+          right: 7,
+          width: 6,
+          height: 6,
+          borderRadius: '50%',
+          background: '#FF2F5D',
+          opacity: bubbleVisible ? 0 : 1,
+          transition: 'opacity 0.3s ease',
+        }}/>
+      </div>
     </div>
   )
 }
