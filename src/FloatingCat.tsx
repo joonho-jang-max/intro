@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-const TOTAL_FRAMES = 96
+const TOTAL_FRAMES = 156
 const FPS = 24
 const BASE = import.meta.env.BASE_URL
 const SIZE = 64
