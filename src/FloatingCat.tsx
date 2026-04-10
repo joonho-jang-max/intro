@@ -91,18 +91,26 @@ export default function FloatingCat() {
         pointerEvents: bubbleVisible ? 'auto' : 'none',
       }}>
         일이삼사오육칠팔구십
-        {/* 꼬리: 6×12 마름모, 아래 6px만 노출, r=0.8 */}
-        <svg
-          width="6" height="6"
-          viewBox="0 0 6 12"
-          style={{ position: 'absolute', bottom: -6, right: 29, display: 'block' }}
-        >
-          {/* 마름모 전체 그리고 상단 6px 잘림 */}
-          <path
-            d="M3 0.8 Q3.8 0 6 6 Q3.8 12 3 11.2 Q2.2 12 0 6 Q2.2 0 3 0.8 Z"
-            fill="#111"
-          />
-        </svg>
+        {/* 꼬리: 컨테이너로 위 절반 숨기고 아래 절반만 노출 */}
+        <div style={{
+          position: 'absolute',
+          bottom: -6,
+          right: 29,
+          width: 6,
+          height: 6,
+          overflow: 'hidden',
+        }}>
+          <svg
+            width="6" height="12"
+            viewBox="0 0 6 12"
+            style={{ position: 'absolute', top: -6, left: 0, display: 'block' }}
+          >
+            <path
+              d="M3 0.8 Q3.8 0 6 6 Q3.8 12 3 11.2 Q2.2 12 0 6 Q2.2 0 3 0.8 Z"
+              fill="#111"
+            />
+          </svg>
+        </div>
       </div>
       <canvas
         ref={canvasRef}
