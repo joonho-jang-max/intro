@@ -131,7 +131,7 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
           {/* 리워드 미션 텍스트 (shrunk 후 페이드인, 가운데 정렬) */}
           <span style={{
             position: 'absolute',
-            top: 0,
+            top: 1,
             left: 0,
             right: 0,
             lineHeight: '26px',
