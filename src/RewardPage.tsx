@@ -29,7 +29,7 @@ function SlotDigit({ target, delay }: { target: number; delay: number }) {
   for (let i = ROLL; i >= 0; i--) items.push(((target - i) % 10 + 10) % 10)
 
   return (
-    <div style={{ width: 32, height: DIGIT_H, overflow: 'hidden', display: 'inline-block', margin: '0 -6px' }}>
+    <div style={{ width: 32, height: DIGIT_H, overflow: 'hidden', display: 'inline-block', margin: '0 -3px' }}>
       <div ref={ref} style={{ transform: 'translateY(0)', willChange: 'transform' }}>
         {items.map((n, i) => (
           <div key={i} style={{ height: DIGIT_H, lineHeight: `${DIGIT_H}px`, fontSize: 42, fontWeight: 700, color: '#121212', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif', textAlign: 'center' }}>{n}</div>
