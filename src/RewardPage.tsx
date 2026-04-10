@@ -19,7 +19,7 @@ function SlotDigit({ target, delay }: { target: number; delay: number }) {
     // 0→target 까지 스크롤 (숫자를 위에서 아래로 쌓아두고 위로 스크롤)
     const totalItems = 10 + target + 1  // 0~9 패딩 + 0~target
     const finalOffset = -(totalItems - 1) * DIGIT_H
-    ref.current.style.transition = `transform 0.6s cubic-bezier(0.17, 0.67, 0.35, 1.0)`
+    ref.current.style.transition = `transform 1.4s cubic-bezier(0.17, 0.67, 0.35, 1.0)`
     ref.current.style.transform = `translateY(${finalOffset}px)`
   }, [started, target])
 
@@ -73,32 +73,24 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
       background: '#fff',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     }}>
-      {/* Nav */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        height: 44,
-        padding: '0 16px',
-        borderBottom: '1px solid #f0f0f0',
-      }}>
-        <button onClick={onBack} style={{
-          background: 'none', border: 'none', cursor: 'pointer',
-          padding: '0 8px 0 0', display: 'flex', alignItems: 'center',
-        }}>
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <path d="M18 6L10 14L18 22" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        <span style={{ fontSize: 16, fontWeight: 600 }}>리워드</span>
-        <span style={{ marginLeft: 'auto', fontSize: 15, fontWeight: 500, color: '#555' }}>내역보기</span>
-      </div>
-
       {/* 디자인 이미지 위에 숫자 오버레이 */}
       <div style={{ position: 'relative' }}>
         <img
           src={`${BASE}figma/fin_page.png`}
           style={{ width: '100%', display: 'block' }}
           alt="reward"
+        />
+        {/* 뒤로가기: 이미지 내 Nav 위치에 투명 터치 영역 */}
+        <div
+          onClick={onBack}
+          style={{
+            position: 'absolute',
+            top: `${(50 / 468) * 100}%`,
+            left: 0,
+            width: `${(44 / 375) * 100}%`,
+            height: `${(44 / 468) * 100}%`,
+            cursor: 'pointer',
+          }}
         />
         {/* 1221 위치: rel_x=16 rel_y=308, frame h=468
             이미지 비율에 맞게 % 로 */}
