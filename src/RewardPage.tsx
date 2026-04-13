@@ -19,12 +19,12 @@ function SlotDigit({ target, delay }: { target: number; delay: number }) {
 
   useEffect(() => {
     if (!started || !ref.current) return
-    const ROLL = 4
-    ref.current.style.transition = `transform 1.4s cubic-bezier(0.17, 0.67, 0.35, 1.0)`
+    const ROLL = 5
+    ref.current.style.transition = `transform 0.9s cubic-bezier(0.17, 0.67, 0.35, 1.0)`
     ref.current.style.transform = `translateY(${-ROLL * DIGIT_H}px)`
   }, [started])
 
-  const ROLL = 4
+  const ROLL = 5
   const items: number[] = []
   for (let i = ROLL; i >= 0; i--) items.push(((target - i) % 10 + 10) % 10)
 
