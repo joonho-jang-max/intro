@@ -2,37 +2,24 @@ import { useLayoutEffect, useRef, useState } from 'react'
 
 const BASE = import.meta.env.BASE_URL
 const SIZE = 64
-const SHRUNK_WIDTH = 74
 
 export default function FloatingCat({ onClick }: { onClick?: () => void }) {
-  const [shrunk, setShrunk] = useState(false)
-  const shrunkRef = useRef(false)
-
-  const pillRef = useRef<HTMLDivElement>(null)
-  const [initWidth, setInitWidth] = useState<number | null>(null)
-  const [canTransition, setCanTransition] = useState(false)
-
-  useLayoutEffect(() => {
-    if (!pillRef.current) return
-    const w = pillRef.current.offsetWidth
-    setInitWidth(w)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setCanTransition(true))
-    })
-  }, [])
+  const [hidden, setHidden] = useState(false)
+  const hiddenRef = useRef(false)
 
   useLayoutEffect(() => {
     function onScroll() {
-      if (!shrunkRef.current && window.scrollY >= 10) {
-        shrunkRef.current = true
-        setShrunk(true)
+      if (!hiddenRef.current && window.scrollY >= 10) {
+        hiddenRef.current = true
+        setHidden(true)
+      } else if (hiddenRef.current && window.scrollY < 10) {
+        hiddenRef.current = false
+        setHidden(false)
       }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  const pillWidth = shrunk ? SHRUNK_WIDTH : (initWidth ?? undefined)
 
   return (
     <div style={{
@@ -46,10 +33,15 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
       alignItems: 'flex-end',
     }} onClick={onClick}>
 
-      {/* 말풍선 + 꼬리 + 레드닷 */}
-      <div style={{ position: 'relative', marginBottom: 6 }}>
-        <div ref={pillRef} style={{
-          position: 'relative',
+      {/* 말풍선 + 꼬리 */}
+      <div style={{
+        position: 'relative',
+        marginBottom: 6,
+        opacity: hidden ? 0 : 1,
+        transition: 'opacity 0.3s ease-in-out',
+        pointerEvents: hidden ? 'none' : 'auto',
+      }}>
+        <div style={{
           background: '#111',
           color: '#fff',
           fontSize: 12,
@@ -57,43 +49,13 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
           fontFamily: '"Pretendard", -apple-system, BlinkMacSystemFont, sans-serif',
           height: 28,
           borderRadius: 20,
-          overflow: 'hidden',
           whiteSpace: 'nowrap',
-          width: initWidth === null ? 'max-content' : pillWidth,
           padding: '0 12px',
           lineHeight: '28px',
-          transition: canTransition ? 'width 0.45s ease-in-out' : 'none',
           boxSizing: 'border-box',
         }}>
-          <span style={{
-            position: 'absolute', top: 0, left: 12,
-            lineHeight: '28px', whiteSpace: 'nowrap',
-            opacity: shrunk ? 0 : 1,
-            transition: 'opacity 0.25s ease-in-out',
-          }}>
-            오늘 쿠키미션 확인해보세요!
-          </span>
-          <span style={{
-            position: 'absolute', top: 1, left: 0, right: 0,
-            lineHeight: '26px', paddingBottom: 2,
-            whiteSpace: 'nowrap', textAlign: 'center',
-            opacity: shrunk ? 1 : 0,
-            transition: shrunk ? 'opacity 0.25s ease-in-out 0.5s' : 'none',
-          }}>
-            리워드 미션
-          </span>
-          <span style={{ visibility: 'hidden', pointerEvents: 'none' }}>
-            오늘 쿠키미션 확인해보세요!
-          </span>
+          오늘 쿠키미션 확인해보세요!
         </div>
-
-        {/* 레드닷 */}
-        <div style={{
-          position: 'absolute', top: 1.5, right: 1.5,
-          width: 6, height: 6, borderRadius: '50%',
-          background: '#FF2F5D', boxShadow: '0 0 0 1.5px #fff',
-          pointerEvents: 'none',
-        }}/>
 
         {/* 꼬리 */}
         <div style={{
@@ -108,10 +70,7 @@ export default function FloatingCat({ onClick }: { onClick?: () => void }) {
       </div>
 
       {/* 고양이 APNG */}
-      <div style={{
-        position: 'relative',
-        width: SIZE, height: SIZE,
-      }}>
+      <div style={{ position: 'relative', width: SIZE, height: SIZE }}>
         <div style={{
           position: 'absolute', inset: 0,
           borderRadius: 26,
