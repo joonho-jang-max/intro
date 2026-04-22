@@ -65,12 +65,14 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
         {/* top 이미지 */}
         <img src={`${BASE}top.png`} style={{ position: 'relative', width: '100%', display: 'block' }} alt="" />
 
-        {/* bb.apng 고양이 + 뱃지 */}
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', marginTop: 120 }}>
-          <img src={`${BASE}bb.apng`} style={{ width: 180, display: 'block' }} alt="" />
-          <img src={`${BASE}figma/reward_badge.png`}
-            style={{ position: 'absolute', bottom: '22%', left: '50%', transform: 'translateX(-50%)', width: 134, display: 'block', pointerEvents: 'none' }}
-            alt="" />
+        {/* bb.apng 고양이 + 뱃지 — 화면 최상단으로부터 120px */}
+        <div style={{ position: 'absolute', top: 120, left: '50%', transform: 'translateX(-50%)' }}>
+          <div style={{ position: 'relative' }}>
+            <img src={`${BASE}bb.apng`} style={{ width: 180, display: 'block' }} alt="" />
+            <img src={`${BASE}figma/reward_badge.png`}
+              style={{ position: 'absolute', bottom: '22%', left: '50%', transform: 'translateX(-50%)', width: 134, display: 'block', pointerEvents: 'none' }}
+              alt="" />
+          </div>
         </div>
       </div>
 
