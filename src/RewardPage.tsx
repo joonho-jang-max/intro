@@ -114,7 +114,7 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
       <div style={{ position: 'relative' }}>
         {/* 배경 */}
         <img src={`${BASE}ddd.png`}
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', pointerEvents: 'none' }}
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 378, objectFit: 'cover', display: 'block', pointerEvents: 'none' }}
           alt="" />
         {/* 하단 그라데이션 마스크 */}
         <div style={{
