@@ -49,7 +49,7 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
     <div style={{ width: '100%', minHeight: '100vh', background: '#fff', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif', overflow: 'hidden' }}>
 
       {/* ── Hero 블록 ── */}
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative', minHeight: 378 }}>
         {/* 배경 */}
         <img src={`${BASE}ddd.png`}
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 378, objectFit: 'cover', display: 'block', pointerEvents: 'none' }}
