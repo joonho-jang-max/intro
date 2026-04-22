@@ -3,10 +3,6 @@ import { useEffect, useRef, useState } from 'react'
 const BASE = import.meta.env.BASE_URL
 const TARGET = 1221
 const DIGIT_H = 42
-const FPS = 24
-
-const IDLE_FRAMES = Array.from({ length: 17 }, (_, i) => i + 1)
-const ACTION_FRAMES = Array.from({ length: 32 }, (_, i) => i + 18)
 
 function SlotDigit({ target, delay }: { target: number; delay: number }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -49,68 +45,10 @@ function SlotNumber({ value }: { value: number }) {
 }
 
 export default function RewardPage({ onBack }: { onBack: () => void }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const modeRef = useRef<'idle' | 'action'>('idle')
-  const frameIdxRef = useRef(0)
-  const rafRef = useRef(0)
-  const imagesRef = useRef<Record<number, HTMLImageElement>>({})
-  const loadedRef = useRef(0)
-
-  useEffect(() => {
-    const canvas = canvasRef.current!
-    const dpr = window.devicePixelRatio || 2
-    const displayW = canvas.offsetWidth
-    const displayH = displayW * (960 / 540)
-    canvas.width = displayW * dpr
-    canvas.height = displayH * dpr
-    canvas.style.height = `${displayH}px`
-    const ctx = canvas.getContext('2d')!
-
-    const allFrameNums = [...IDLE_FRAMES, ...ACTION_FRAMES]
-    allFrameNums.forEach(n => {
-      const img = new Image()
-      img.src = `${BASE}catwalk/cat_${n}.png`
-      img.onload = () => {
-        imagesRef.current[n] = img
-        loadedRef.current++
-        if (loadedRef.current === allFrameNums.length) startLoop()
-      }
-    })
-
-    let last = 0
-    const interval = 1000 / FPS
-    function startLoop() {
-      function tick(ts: number) {
-        if (ts - last >= interval) {
-          const frames = modeRef.current === 'idle' ? IDLE_FRAMES : ACTION_FRAMES
-          ctx.clearRect(0, 0, canvas.width, canvas.height)
-          const img = imagesRef.current[frames[frameIdxRef.current]]
-          if (img) ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-          frameIdxRef.current++
-          if (frameIdxRef.current >= frames.length) {
-            if (modeRef.current === 'action') modeRef.current = 'idle'
-            frameIdxRef.current = 0
-          }
-          last = ts
-        }
-        rafRef.current = requestAnimationFrame(tick)
-      }
-      rafRef.current = requestAnimationFrame(tick)
-    }
-    return () => cancelAnimationFrame(rafRef.current)
-  }, [])
-
-  const handleButtonClick = () => {
-    if (modeRef.current !== 'action') {
-      modeRef.current = 'action'
-      frameIdxRef.current = 0
-    }
-  }
-
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: '#fff', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif', overflow: 'hidden' }}>
 
-      {/* ── Hero 블록: 배경 + nav + 고양이 + 뱃지 ── */}
+      {/* ── Hero 블록 ── */}
       <div style={{ position: 'relative' }}>
         {/* 배경 */}
         <img src={`${BASE}ddd.png`}
@@ -135,10 +73,9 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
           <span style={{ marginLeft: 'auto', fontSize: 15, fontWeight: 500, color: '#555' }}>내역보기</span>
         </div>
 
-        {/* 고양이 캔버스 (flow → hero 높이 결정) + 뱃지 overlay */}
+        {/* bb.apng 고양이 + 뱃지 */}
         <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-          <canvas ref={canvasRef} style={{ width: 200, display: 'block' }} />
-          {/* 쿠키 30개 수령 완료! 뱃지: 고양이 하단 오버레이 */}
+          <img src={`${BASE}bb.apng`} style={{ width: 180, display: 'block' }} alt="" />
           <img src={`${BASE}figma/reward_badge.png`}
             style={{ position: 'absolute', bottom: '22%', left: '50%', transform: 'translateX(-50%)', width: 134, display: 'block', pointerEvents: 'none' }}
             alt="" />
@@ -147,11 +84,9 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
 
       {/* ── 하단 섹션 ── */}
       <div style={{ padding: '0 16px 0', position: 'relative', marginTop: -60 }}>
-        {/* 현재 쿠키조각 레이블 */}
         <div style={{ fontSize: 15, fontWeight: 600, color: '#000', letterSpacing: -0.15, lineHeight: '18px', marginBottom: 2 }}>
           현재 쿠키조각
         </div>
-        {/* 1221 + /100개 + mi 같은 줄 */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
             <SlotNumber value={TARGET} />
@@ -161,9 +96,7 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
         </div>
 
         {/* Button_R */}
-        <div onClick={handleButtonClick} style={{ cursor: 'pointer' }}>
-          <img src={`${BASE}figma/reward_button.png`} style={{ width: '100%', display: 'block' }} alt="쿠키로 교환하기" />
-        </div>
+        <img src={`${BASE}figma/reward_button.png`} style={{ width: '100%', display: 'block', cursor: 'pointer' }} alt="쿠키로 교환하기" />
       </div>
 
     </div>
