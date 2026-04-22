@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 
 const BASE = import.meta.env.BASE_URL
-const SIZE = 64
+const SIZE = 60
 
 export default function FloatingCat({ onClick }: { onClick?: () => void }) {
   const [hidden, setHidden] = useState(false)
