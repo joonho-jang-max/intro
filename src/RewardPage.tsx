@@ -113,9 +113,16 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
       {/* ── Hero 블록: 배경 + nav + 고양이 + 뱃지 ── */}
       <div style={{ position: 'relative' }}>
         {/* 배경 */}
-        <img src={`${BASE}figma/reward_bg.png`}
+        <img src={`${BASE}ddd.png`}
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', pointerEvents: 'none' }}
           alt="" />
+        {/* 하단 그라데이션 마스크 */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          height: 100,
+          background: 'linear-gradient(to bottom, transparent, #fff)',
+          pointerEvents: 'none',
+        }}/>
 
         {/* Nav */}
         <div style={{ position: 'relative', height: 44, display: 'flex', alignItems: 'center', padding: '0 16px' }}>
