@@ -62,19 +62,11 @@ export default function RewardPage({ onBack }: { onBack: () => void }) {
           pointerEvents: 'none',
         }}/>
 
-        {/* Nav */}
-        <div style={{ position: 'relative', height: 44, display: 'flex', alignItems: 'center', padding: '0 16px' }}>
-          <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 8px 0 0', display: 'flex', alignItems: 'center' }}>
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <path d="M18 6L10 14L18 22" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <span style={{ fontSize: 16, fontWeight: 600 }}>리워드</span>
-          <span style={{ marginLeft: 'auto', fontSize: 15, fontWeight: 500, color: '#555' }}>내역보기</span>
-        </div>
+        {/* top 이미지 */}
+        <img src={`${BASE}top.png`} style={{ position: 'relative', width: '100%', display: 'block' }} alt="" />
 
         {/* bb.apng 고양이 + 뱃지 */}
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', marginTop: 120 }}>
           <img src={`${BASE}bb.apng`} style={{ width: 180, display: 'block' }} alt="" />
           <img src={`${BASE}figma/reward_badge.png`}
             style={{ position: 'absolute', bottom: '22%', left: '50%', transform: 'translateX(-50%)', width: 134, display: 'block', pointerEvents: 'none' }}
